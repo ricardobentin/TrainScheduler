@@ -69,4 +69,6 @@ database.ref().on("child_added", function (snapshot) {
     console.log("ARRIVAL TIME: " + moment(nextTrain).format("HH:mm"));
     //jquery selector on tbody to append the table rows with data to fill in the train schedule information
     $("tbody").append(`<tr> <td>${sv.Train}</td><td>${sv.Destination}</td><td>${sv.Frequency}</td><td>${moment(nextTrain).format("HH:mm")}</td><td>${tMinutesTillTrain}</td></tr>`);
+    //adding formatted current time to jumbotron
+    $("#currentTime").text(currentTime.format("HH:mm"));
 })
