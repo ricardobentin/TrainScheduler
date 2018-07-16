@@ -10,6 +10,24 @@ var config = {
 firebase.initializeApp(config);
 //create a variable called database to be a reference to the firesbase.database object
 var database = firebase.database();
+//google authentication
+// var provider = new firebase.auth.GoogleAuthProvider();
+// firebase.auth().signInWithPopup(provider).then(function (result) {
+//     // This gives you a Google Access Token. You can use it to access the Google API.
+//     var token = result.credential.accessToken;
+//     // The signed-in user info.
+//     var user = result.user;
+//     // ...
+// }).catch(function (error) {
+//     // Handle Errors here.
+//     var errorCode = error.code;
+//     var errorMessage = error.message;
+//     // The email of the user's account used.
+//     var email = error.email;
+//     // The firebase.auth.AuthCredential type that was used.
+//     var credential = error.credential;
+//     // ...
+// });
 //declare all variables with blank values
 var trainName = "";
 var trainDestination = "";
@@ -17,7 +35,7 @@ var firstTrainTime = "";
 var trainFrequency = "";
 //click event handler for when the add train button is clicked
 $("#add-train-btn").on("click", function () {
-   //prevent page refresh on click
+    //prevent page refresh on click
     event.preventDefault();
     //grab the values from the input boxes and place assign them to the variables
     trainName = $("#train-name-input").val().trim();
@@ -39,10 +57,10 @@ $("#add-train-btn").on("click", function () {
     $("#time-input").val("");
     $("#frequency-input").val("");
 
-    console.log("train name: ",trainName);
-    console.log("destination: ",trainDestination);
-    console.log("first train time: ",firstTrainTime);
-    console.log("train frequency: ",firstTrainTime);
+    console.log("train name: ", trainName);
+    console.log("destination: ", trainDestination);
+    console.log("first train time: ", firstTrainTime);
+    console.log("train frequency: ", firstTrainTime);
 
 });
 //firebase listener for when a child is added to "take a snapshot" and show the relevant information on the page
@@ -71,4 +89,5 @@ database.ref().on("child_added", function (snapshot) {
     $("tbody").append(`<tr> <td>${sv.Train}</td><td>${sv.Destination}</td><td>${sv.Frequency}</td><td>${moment(nextTrain).format("HH:mm")}</td><td>${tMinutesTillTrain}</td></tr>`);
     //adding formatted current time to jumbotron
     $("#currentTime").text(currentTime.format("HH:mm"));
-})
+
+});
