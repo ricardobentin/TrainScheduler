@@ -5,22 +5,68 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Train Schedule</title>
+    <link rel="icon" href="./assets/images/train.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="./assets/css/style.css" />
     <!-- Bootstrap -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-  <!-- jQuery -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-  <!-- Firebase Reference -->
-  <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
-  <!-- Moment.js Reference -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- Firebase Reference -->
+    <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
+    <!-- Moment.js Reference -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 </head>
 
 <body>
+    <div class="container">
+        <!-- Jumbotron -->
+        <div class="jumbotron" style="background-color: orange; color: white">
+            <h1 class="text-center">Train Schedule</h1>
 
-<script src="./assets/javascript/app.js"></script>
+            <h3 class="text-center">Up To The Minute Train Schedule Listings </h3>
+        </div>
+        <div class="row" id="current">
+            <div class="col-md-12">
+                <div class="card mb-4 p-4">
+                    <div class="card-body">
+                        <h3 class="card-title">Current Train Schedule</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="add">
+            <div class="col-md-12">
+                <div class="card mb-4 p-4">
+                    <div class="card-body">
+                        <h3 class="card-title">Add Train</h3>
+                        <form>
+                            <div class="form-group row">
+                                <label for="Train Name">Train Name</label>
+                                <input class="form-control" id="train-name-input" placeholder="Example: North East Corridor" type="text">
+                            </div>
+                            <div class="form-group row">
+                                <label for="destination">Destination</label>
+                                <input class="form-control" id="destination-input" placeholder="Example: Penn Station" type="text">
+                            </div>
+                            <div class="form-group row">
+                                <label for="firstTrainTime">First Train Time (HH:mm - military time)</label>
+                                <input class="form-control" id="time-input" placeholder="Example: 13:30 for 1:30 PM" type="text">
+                            </div>
+                            <div class="form-group row">
+                                    <label for="frequency">Frequency (min)</label>
+                                    <input class="form-control" id="frequency-input" placeholder="Example: 30 for every half hour" type="text">
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./assets/javascript/app.js"></script>
 </body>
 
 </html>
