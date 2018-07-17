@@ -11,83 +11,90 @@ firebase.initializeApp(config);
 //create a variable called database to be a reference to the firesbase.database object
 var database = firebase.database();
 //google authentication
-// var provider = new firebase.auth.GoogleAuthProvider();
-// firebase.auth().signInWithPopup(provider).then(function (result) {
-//     // This gives you a Google Access Token. You can use it to access the Google API.
-//     var token = result.credential.accessToken;
-//     // The signed-in user info.
-//     var user = result.user;
-//     // ...
-// }).catch(function (error) {
-//     // Handle Errors here.
-//     var errorCode = error.code;
-//     var errorMessage = error.message;
-//     // The email of the user's account used.
-//     var email = error.email;
-//     // The firebase.auth.AuthCredential type that was used.
-//     var credential = error.credential;
-//     // ...
-// });
-//declare all variables with blank values
-var trainName = "";
-var trainDestination = "";
-var firstTrainTime = "";
-var trainFrequency = "";
-//click event handler for when the add train button is clicked
-$("#add-train-btn").on("click", function () {
-    //prevent page refresh on click
-    event.preventDefault();
-    //grab the values from the input boxes and place assign them to the variables
-    trainName = $("#train-name-input").val().trim();
-    trainDestination = $("#destination-input").val().trim();
-    firstTrainTime = $("#time-input").val().trim();
-    trainFrequency = $("#frequency-input").val().trim();
-    //updated the firebase database with the variable values
-    database.ref().push({
-        Train: trainName,
-        Destination: trainDestination,
-        First_Departure: firstTrainTime,
-        Frequency: trainFrequency,
-        dateAdded: firebase.database.ServerValue.TIMESTAMP
+function login() {
+    function newLogin(user) {
+        if (user) {
+            //login happened
+            app(user);
+        }
+        else {
+            var provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithRedirect(provider);
+        }
+
+    }
+    firebase.auth().onAuthStateChanged(newLogin);
+}
+function app(user) {
+    //declare all variables with blank values
+    var trainName = "";
+    var trainDestination = "";
+    var firstTrainTime = "";
+    var trainFrequency = "";
+    //click event handler for when the add train button is clicked
+    $("#add-train-btn").on("click", function () {
+        //prevent page refresh on click
+        event.preventDefault();
+        //grab the values from the input boxes and place assign them to the variables
+        trainName = $("#train-name-input").val().trim();
+        trainDestination = $("#destination-input").val().trim();
+        firstTrainTime = $("#time-input").val().trim();
+        trainFrequency = $("#frequency-input").val().trim();
+        //updated the firebase database with the variable values
+        database.ref().push({
+            Train: trainName,
+            Destination: trainDestination,
+            First_Departure: firstTrainTime,
+            Frequency: trainFrequency,
+            dateAdded: firebase.database.ServerValue.TIMESTAMP
+        });
+        console.log(database);
+        //clear the inut boxes so that the user can add new train information
+        $("#train-name-input").val("");
+        $("#destination-input").val("");
+        $("#time-input").val("");
+        $("#frequency-input").val("");
+
+        console.log("train name: ", trainName);
+        console.log("destination: ", trainDestination);
+        console.log("first train time: ", firstTrainTime);
+        console.log("train frequency: ", firstTrainTime);
+
     });
-    console.log(database);
-    //clear the inut boxes so that the user can add new train information
-    $("#train-name-input").val("");
-    $("#destination-input").val("");
-    $("#time-input").val("");
-    $("#frequency-input").val("");
+    //firebase listener for when a child is added to "take a snapshot" and show the relevant information on the page
+    database.ref().on("child_added", function (snapshot) {
+        var sv = snapshot.val();
+        //logic for getting next arrival and minutes away
+        // First Time (pushed back 1 year to make sure it comes before current time)
+        var firstTimeConverted = moment(sv.First_Departure, "HH:mm").subtract(1, "years");
+        console.log("First Time Converted: " + firstTimeConverted);
+        // Current Time
+        var currentTime = moment();
+        console.log("CURRENT TIME: " + moment(currentTime).format("HH:mm"));
+        // Difference between the times
+        var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+        console.log("DIFFERENCE IN TIME: " + diffTime);
+        // Time apart (remainder)
+        var tRemainder = diffTime % sv.Frequency;
+        console.log(tRemainder);
+        // Minute Until Train
+        var tMinutesTillTrain = sv.Frequency - tRemainder;
+        console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
+        // Next Train
+        var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+        console.log("ARRIVAL TIME: " + moment(nextTrain).format("HH:mm"));
+        //jquery selector on tbody to append the table rows with data to fill in the train schedule information
+        $("tbody").append(`<tr> <td>${sv.Train}</td><td>${sv.Destination}</td><td>${sv.Frequency}</td><td>${moment(nextTrain).format("HH:mm")}</td><td>${tMinutesTillTrain}</td></tr>`);
 
-    console.log("train name: ", trainName);
-    console.log("destination: ", trainDestination);
-    console.log("first train time: ", firstTrainTime);
-    console.log("train frequency: ", firstTrainTime);
-
-});
-//firebase listener for when a child is added to "take a snapshot" and show the relevant information on the page
-database.ref().on("child_added", function (snapshot) {
-    var sv = snapshot.val();
-    //logic for getting next arrival and minutes away
-    // First Time (pushed back 1 year to make sure it comes before current time)
-    var firstTimeConverted = moment(sv.First_Departure, "HH:mm").subtract(1, "years");
-    console.log("First Time Converted: " + firstTimeConverted);
-    // Current Time
-    var currentTime = moment();
-    console.log("CURRENT TIME: " + moment(currentTime).format("HH:mm"));
-    // Difference between the times
-    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-    console.log("DIFFERENCE IN TIME: " + diffTime);
-    // Time apart (remainder)
-    var tRemainder = diffTime % sv.Frequency;
-    console.log(tRemainder);
-    // Minute Until Train
-    var tMinutesTillTrain = sv.Frequency - tRemainder;
-    console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
-    // Next Train
-    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
-    console.log("ARRIVAL TIME: " + moment(nextTrain).format("HH:mm"));
-    //jquery selector on tbody to append the table rows with data to fill in the train schedule information
-    $("tbody").append(`<tr> <td>${sv.Train}</td><td>${sv.Destination}</td><td>${sv.Frequency}</td><td>${moment(nextTrain).format("HH:mm")}</td><td>${tMinutesTillTrain}</td></tr>`);
-    //adding formatted current time to jumbotron
-    $("#currentTime").text(currentTime.format("HH:mm"));
-
-});
+    });
+    //adding formatted current time to jumbotron to update every second
+    function updateTime() {
+        setInterval(showTime, 1000);
+    }
+    function showTime() {
+        $("#currentTime").text(moment().format("HH:mm:ss"));
+    }
+    //call updateTime function to display the current time every second
+    updateTime();
+};
+window.onload = login;
