@@ -15,6 +15,7 @@ function login() {
     function newLogin(user) {
         if (user) {
             //login happened
+            console.log("Sign In Successful")
             app(user);
         }
         else {
@@ -25,6 +26,16 @@ function login() {
     }
     firebase.auth().onAuthStateChanged(newLogin);
 }
+//function to log a user out
+$("#logout").on("click", function () {
+    firebase.auth().signOut().then(function () {
+        // Sign-out successful.
+        console.log("Sign Out Successful");
+    }).catch(function (error) {
+        // An error happened.
+        console.log("ERROR: Sign Out Failed");
+    });
+});
 function app(user) {
     //write username to the jumbotron
     $("#userName").text(user.displayName);
