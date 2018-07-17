@@ -44,7 +44,7 @@ function app(user) {
     console.log(user);
     //write username to the jumbotron
     $("#userName").text(user.displayName);
-    $("#userName").attr("src", user.photoURL);
+    $("#userName").attr("src", "user.photoURL");
     //declare all variables with blank values
     var trainName = "";
     var trainDestination = "";
