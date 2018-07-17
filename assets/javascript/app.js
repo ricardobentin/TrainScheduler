@@ -41,6 +41,7 @@ $("#logout").on("click", function () {
 });
 //this function is basically the rest of the code for the page that only gets called whenever we have  successful login
 function app(user) {
+    console.log(user);
     //write username to the jumbotron
     $("#userName").text(user.displayName);
     //declare all variables with blank values
@@ -114,5 +115,5 @@ function app(user) {
     //call updateTime function to display the current time every second
     updateTime();
 };
-//this code makes the login the first thing to run when the page loads. User cannot do anything with the app until they sign in.
+//this code makes login the first thing to run when the page loads. User cannot do anything with the app until they sign in.
 window.onload = login;
