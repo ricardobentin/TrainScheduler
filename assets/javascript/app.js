@@ -12,18 +12,21 @@ firebase.initializeApp(config);
 var database = firebase.database();
 //google authentication
 function login() {
+    //newLogin checks if a user exists, if it does the login happened and passes user to app function
     function newLogin(user) {
         if (user) {
             //login happened
             console.log("Sign In Successful")
             app(user);
         }
+        //if a user does not exist, then we need to force the user to sign in via google
         else {
             var provider = new firebase.auth.GoogleAuthProvider();
             firebase.auth().signInWithRedirect(provider);
         }
 
     }
+    //this is a firebase listener for whenenver the "State" of a login changes
     firebase.auth().onAuthStateChanged(newLogin);
 }
 //function to log a user out
@@ -36,6 +39,7 @@ $("#logout").on("click", function () {
         console.log("ERROR: Sign Out Failed");
     });
 });
+//this function is basically the rest of the code for the page that only gets called whenever we have  successful login
 function app(user) {
     //write username to the jumbotron
     $("#userName").text(user.displayName);
@@ -110,4 +114,5 @@ function app(user) {
     //call updateTime function to display the current time every second
     updateTime();
 };
+//this code makes the login the first thing to run when the page loads. User cannot do anything with the app until they sign in.
 window.onload = login;
