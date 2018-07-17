@@ -26,6 +26,8 @@ function login() {
     firebase.auth().onAuthStateChanged(newLogin);
 }
 function app(user) {
+    //write username to the jumbotron
+    $("#userName").text(user.displayName);
     //declare all variables with blank values
     var trainName = "";
     var trainDestination = "";
