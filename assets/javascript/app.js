@@ -42,10 +42,9 @@ $("#logout").on("click", function () {
 //this function is basically the rest of the code for the page that only gets called whenever we have  successful login
 function app(user) {
     console.log(user);
-    var photo = user.photoURL;
     //write username to the jumbotron
     $("#userName").text(user.displayName);
-    $("#userName").attr("src", photo);
+    $("#userImage").attr("src", user.photoURL);
     //declare all variables with blank values
     var trainName = "";
     var trainDestination = "";
